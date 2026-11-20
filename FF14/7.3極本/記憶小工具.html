@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="青之連魂">
+<title>青之連魂 順序</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE: 戰鬥中一眼就看懂的工具，安靜、果斷
+   IDEA: 副本裡的機制提示，一張卡就是一種內外組合
+   PICTURE: 六張組合卡 + 四顆起始號按鈕 + 大字結果
+   COLOUR and TYPE: 深夜藍黑底，內＝青魂藍、外＝紫紅；Noto Sans TC 粗體
+   LAYOUT: 單欄，① 選卡 ② 選起始號 ③ 結果；手機卡片兩欄 */
+:root{color-scheme:dark;--bg:#0b1020;--panel:#141b30;--line:#26304d;--ink:#eef2ff;--mute:#9aa6c8;--in:#46c8f0;--out:#e070b0;--gap:clamp(7px,1.4dvh,14px)}
+*{box-sizing:border-box;min-width:0}
+html{-webkit-text-size-adjust:100%;height:100%}
+body{margin:0;height:100%;background:radial-gradient(1200px 500px at 50% -10%,#16244a,var(--bg) 70%);background-color:var(--bg);color:var(--ink);font:16px/1.4 "Noto Sans TC",system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+main{max-width:760px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:var(--gap);
+  padding:calc(env(safe-area-inset-top) + clamp(10px,2dvh,28px)) calc(env(safe-area-inset-right) + max(3vw,10px)) calc(env(safe-area-inset-bottom) + clamp(10px,2dvh,28px)) calc(env(safe-area-inset-left) + max(3vw,10px))}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex:none}
+h1{font-size:clamp(22px,min(5vw,4dvh),36px);line-height:1.1;margin:0;font-weight:900}
+.sec{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:clamp(10px,1.6dvh,16px);display:flex;flex-direction:column;min-height:0}
+.s1{flex:3 1 0}.s2{flex:1.25 1 0}.s3{flex:2 1 0}
+.lab{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:clamp(6px,1dvh,10px);font-weight:700;font-size:clamp(14px,2dvh,17px);flex:none}
+.lab small{color:var(--mute);font-weight:400;font-size:13px}
+button{font:inherit;cursor:pointer;border-radius:12px;border:0;color:var(--ink);touch-action:manipulation}
+button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.reset{flex:none;width:100%;min-height:clamp(50px,7dvh,76px);font-size:clamp(19px,2.8dvh,26px);font-weight:900;letter-spacing:.3em;text-indent:.3em;background:#5a2236;color:#ffe0e8;border:2px solid #8a3a55;border-radius:16px}.reset:active{background:#7a2c48}
+.cards{flex:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(56px,1fr);gap:var(--gap)}
+.card{background:#0f1528;border:2px solid var(--line);padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(2px,.8dvh,8px)}
+.card .n{font-size:clamp(11px,1.5dvh,14px);color:var(--mute);font-weight:700}
+.card .p{font-size:clamp(17px,min(6.4vw,4.6dvh),38px);font-weight:900;white-space:nowrap;line-height:1}
+.in{color:var(--in)}.out{color:var(--out)}
+.card.sel{border-color:#fff;background:#1b2442}
+.cards.picked .card:not(.sel){opacity:.35}
+.starts{flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
+.st{min-height:52px;font-size:clamp(22px,min(7vw,5dvh),44px);font-weight:900;line-height:1;background:#222b47;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(2px,.8dvh,8px)}
+.st small{font-size:clamp(11px,1.5dvh,14px);font-weight:400;color:var(--mute)}
+.st.sel{border-color:#fff;background:#2c3866}
+.st:disabled{opacity:.3;cursor:not-allowed}
+#res{flex:1;display:flex;min-height:0}
+.res{flex:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
+.res div{border-radius:14px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(4px,1.2dvh,12px);font-size:clamp(30px,min(11vw,8dvh),84px);font-weight:900;line-height:1}
+.res div small{font-size:clamp(11px,1.5dvh,14px);font-weight:700;color:var(--mute);white-space:nowrap}
+.res .in{background:#46c8f022;box-shadow:inset 0 0 0 2px var(--in)}
+.res .out{background:#e070b022;box-shadow:inset 0 0 0 2px var(--out)}
+.empty{flex:1;display:grid;place-items:center;color:var(--mute);font-size:15px;border:2px dashed var(--line);border-radius:14px}
+.keys{color:var(--mute);font-size:13px;line-height:1.6;margin:0;flex:none}
+kbd{background:#222b47;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:inherit;color:var(--ink)}
+@media(prefers-reduced-motion:no-preference){.card,.st{transition:opacity .12s,border-color .12s,background .12s}}
+@media(hover:none){.keys{display:none}.card:active,.st:active{background:#2c3866}}
+@media(max-width:340px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:400px){.res div small{font-size:10px}}
+</style>
+</head>
+<body>
+<main>
+
+<section class="sec s1">
+  <div class="lab">① 原本提示組合 <small>點一張卡</small></div>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section class="sec s2">
+  <div class="lab">② 從第幾號開始</div>
+  <div class="starts" id="starts"></div>
+</section>
+
+<section class="sec s3">
+  <div class="lab">③ 新順序 <small id="rname"></small></div>
+  <div id="res"></div>
+</section>
+
+<button class="reset" id="bReset">重置</button>
+
+<p class="keys">鍵盤：未選卡時 <kbd>1</kbd>–<kbd>6</kbd> 選卡；選卡後 <kbd>1</kbd>–<kbd>4</kbd> 選起始號　<kbd>R</kbd> / <kbd>Space</kbd> 重置</p>
+</main>
+
+<script>
+{
+  const PATS = ['內內外外','外外內內','內外外內','外內內外','內外內外','外內外內'];
+  let card = -1, start = -1;
+  const $ = id => document.getElementById(id);
+  const cls = ch => ch === '內' ? 'in' : 'out';
+  const colorize = s => [...s].map(ch => `<span class="${cls(ch)}">${ch}</span>`).join('');
+
+  const render = () => {
+    $('cards').className = 'cards' + (card >= 0 ? ' picked' : '');
+    $('cards').innerHTML = PATS.map((p, i) =>
+      `<button class="card ${card === i ? 'sel' : ''}" data-i="${i}"><span class="n">${i+1}</span><span class="p">${colorize(p)}</span></button>`
+    ).join('');
+
+    $('starts').innerHTML = [0,1,2,3].map(k => {
+      const order = [0,1,2,3].map(j => (k + j) % 4 + 1).join('');
+      return `<button class="st ${start === k ? 'sel' : ''}" data-k="${k}" ${card < 0 ? 'disabled' : ''}>${k+1}<small>${order}</small></button>`;
+    }).join('');
+
+    if (card < 0) {
+      $('res').innerHTML = `<div class="empty">先選原本的組合</div>`;
+      $('rname').textContent = '';
+    } else if (start < 0) {
+      $('res').innerHTML = `<div class="empty">選從第幾號開始</div>`;
+      $('rname').textContent = '';
+    } else {
+      const p = [...PATS[card]];
+      const idx = [0,1,2,3].map(j => (start + j) % 4);
+      $('rname').textContent = PATS[card] + ' → 從 ' + (start+1) + ' 號開始';
+      $('res').innerHTML = `<div class="res">${idx.map((i, n) =>
+        `<div class="${cls(p[i])}"><small>第 ${n+1} 次（原${i+1}）</small>${p[i]}</div>`).join('')}</div>`;
+    }
+  };
+
+  const reset = () => { card = -1; start = -1; render(); };
+
+  $('cards').addEventListener('click', e => {
+    const b = e.target.closest('.card'); if (!b) return;
+    card = +b.dataset.i; start = -1; render();
+  });
+  $('starts').addEventListener('click', e => {
+    const b = e.target.closest('.st'); if (!b || b.disabled) return;
+    start = +b.dataset.k; render();
+  });
+  $('bReset').addEventListener('click', reset);
+  document.addEventListener('keydown', e => {
+    const k = e.key.toLowerCase();
+    if (k === 'r' || k === ' ') { e.preventDefault(); reset(); return; }
+    const n = parseInt(k, 10);
+    if (!n) return;
+    if (card < 0 && n <= 6) { card = n - 1; render(); }
+    else if (card >= 0 && n <= 4) { start = n - 1; render(); }
+  });
+
+  render();
+}
+</script>
+</body>
+</html>
