@@ -161,9 +161,18 @@ kbd{background:#222b47;border:1px solid var(--line);border-radius:5px;padding:1p
       document.head.appendChild(sc);
     }
   };
-  document.addEventListener('visibilitychange', keepAwake);
-  document.addEventListener('pointerdown', keepAwake, {passive: true});
-  keepAwake();
+  // 只在行動裝置（觸控、無滑鼠懸停）啟用；PC 端完全不啟用、不顯示
+  const isMobile = matchMedia('(hover: none) and (pointer: coarse)').matches
+    || navigator.userAgentData?.mobile === true
+    || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+    || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS 偽裝成 Mac
+  if (isMobile) {
+    document.addEventListener('visibilitychange', keepAwake);
+    document.addEventListener('pointerdown', keepAwake, {passive: true});
+    keepAwake();
+  } else {
+    wlEl.remove();
+  }
 
   render();
 }
