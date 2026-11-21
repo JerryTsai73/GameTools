@@ -141,7 +141,7 @@ kbd{background:#222b47;border:1px solid var(--line);border-radius:5px;padding:1p
   // 新版瀏覽器用 Screen Wake Lock API；舊版 iOS（< 16.4）改用 NoSleep.js 的影片播放法
   let wl = null, noSleep = null, nsLoading = false;
   const wlEl = $('wl');
-  const showWL = on => { wlEl.textContent = on ? '● 螢幕常亮' : '○ 點一下保持常亮'; wlEl.className = 'wl ' + (on ? 'on' : 'off'); };
+  const showWL = on => { wlEl.textContent = on ? '● 螢幕常亮' : '○ 點任意處保持常亮'; wlEl.className = 'wl ' + (on ? 'on' : 'off'); };
   const keepAwake = async () => {
     if (document.visibilityState !== 'visible') return;
     if ('wakeLock' in navigator) {
