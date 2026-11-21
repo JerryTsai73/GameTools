@@ -29,6 +29,7 @@ h1{font-size:clamp(22px,min(5vw,4dvh),36px);line-height:1.1;margin:0;font-weight
 .s1{flex:3 1 0}.s2{flex:1.25 1 0}.s3{flex:2 1 0}
 .lab{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:clamp(6px,1dvh,10px);font-weight:700;font-size:clamp(14px,2dvh,17px);flex:none}
 .lab small{color:var(--mute);font-weight:400;font-size:13px}
+.wl{margin-right:10px;white-space:nowrap}.wl.on{color:#7be0a0}.wl.off{color:#f0b070}
 button{font:inherit;cursor:pointer;border-radius:12px;border:0;color:var(--ink);touch-action:manipulation}
 button:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .reset{flex:none;width:100%;min-height:clamp(50px,7dvh,76px);font-size:clamp(19px,2.8dvh,26px);font-weight:900;letter-spacing:.3em;text-indent:.3em;background:#5a2236;color:#ffe0e8;border:2px solid #8a3a55;border-radius:16px}.reset:active{background:#7a2c48}
@@ -63,7 +64,7 @@ kbd{background:#222b47;border:1px solid var(--line);border-radius:5px;padding:1p
 <main>
 
 <section class="sec s1">
-  <div class="lab">① 原本提示組合 <small>點一張卡</small></div>
+  <div class="lab">① 原本提示組合 <small><span id="wl" class="wl"></span>點一張卡</small></div>
   <div class="cards" id="cards"></div>
 </section>
 
@@ -135,6 +136,34 @@ kbd{background:#222b47;border:1px solid var(--line);border-radius:5px;padding:1p
     if (card < 0 && n <= 6) { card = n - 1; render(); }
     else if (card >= 0 && n <= 4) { start = n - 1; render(); }
   });
+
+  // ── 防止螢幕休眠 ──
+  // 新版瀏覽器用 Screen Wake Lock API；舊版 iOS（< 16.4）改用 NoSleep.js 的影片播放法
+  let wl = null, noSleep = null, nsLoading = false;
+  const wlEl = $('wl');
+  const showWL = on => { wlEl.textContent = on ? '● 螢幕常亮' : '○ 點一下保持常亮'; wlEl.className = 'wl ' + (on ? 'on' : 'off'); };
+  const keepAwake = async () => {
+    if (document.visibilityState !== 'visible') return;
+    if ('wakeLock' in navigator) {
+      if (wl && !wl.released) return;
+      try {
+        wl = await navigator.wakeLock.request('screen');
+        wl.addEventListener('release', () => showWL(false));
+        showWL(true);
+      } catch (e) { showWL(false); }
+    } else if (noSleep) {
+      if (!noSleep.isEnabled) { try { await noSleep.enable(); showWL(true); } catch (e) { showWL(false); } }
+    } else if (!nsLoading) {
+      nsLoading = true; showWL(false);
+      const sc = document.createElement('script');
+      sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js';
+      sc.onload = () => { try { noSleep = new NoSleep(); } catch (e) {} };
+      document.head.appendChild(sc);
+    }
+  };
+  document.addEventListener('visibilitychange', keepAwake);
+  document.addEventListener('pointerdown', keepAwake, {passive: true});
+  keepAwake();
 
   render();
 }
